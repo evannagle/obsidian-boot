@@ -1,6 +1,6 @@
 {
   "name": "obsidian-boot",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "scripts": {
     "build": "make build",
