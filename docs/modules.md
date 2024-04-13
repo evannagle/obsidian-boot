@@ -1,3 +1,3 @@
-[bootboot](README.md) / Exports
+[obsidian-boot](README.md) / Exports
 
-# bootboot
+# obsidian-boot

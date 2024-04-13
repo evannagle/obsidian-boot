@@ -1,1 +1,1 @@
-bootboot / [Exports](modules.md)
+obsidian-boot / [Exports](modules.md)
