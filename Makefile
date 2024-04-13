@@ -46,7 +46,12 @@ deep-clean: clean
 	$(call title, "Cleaning up all generated files")
 	$(PATH_TO_SCRIPTS)/deep-clean.sh
 
-build:
+build-styles:
+# Compile the SASS file into CSS.
+	$(call title, "Compiling SASS")
+	$(BIN_FOR_NPX) sass src/styles.scss $(PATH_TO_DIST)/styles.css
+
+build: build-styles
 # Build the app, dump into the dist folder.
 	$(call title, "Building the app: $(BIN_FOR_APP)")
 	$(BIN_FOR_NODE) $(PATH_FOR_ESBUILD_CONFIG) production
@@ -148,3 +153,8 @@ env:
 # Move `.env-example` to `.env`.
 	$(call title, "Moving .env-example to .env")
 	cp .env-example .env
+
+release:
+# Release the project.
+	$(call title, "Releasing the project")
+	$(BIN_FOR_NPM) exec standard-version

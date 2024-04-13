@@ -1,0 +1,11 @@
+{
+  "id": "obsidian-boot",
+  "name": "Obsidian Boot",
+  "version": "0.0.1",
+  "description": "",
+  "minAppVersion": "1.5.0",
+  "author": "",
+  "authorUrl": "",
+  "helpUrl": "",
+  "isDesktopOnly": false
+}
