@@ -32,7 +32,7 @@ export default class MyPlugin extends Plugin {
       (evt: MouseEvent) => {
         // Called when the user clicks the icon.
         new Notice("This is a notice!");
-      }
+      },
     );
     // Perform additional things with the ribbon
     ribbonIconEl.addClass("my-plugin-ribbon-class");
@@ -90,7 +90,7 @@ export default class MyPlugin extends Plugin {
 
     // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
     this.registerInterval(
-      window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
+      window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000),
     );
   }
 
@@ -144,7 +144,7 @@ class SampleSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             this.plugin.settings.mySetting = value;
             await this.plugin.saveSettings();
-          })
+          }),
       );
   }
 }
