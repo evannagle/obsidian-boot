@@ -4,6 +4,7 @@
 
 
 BIN_FOR_APP					= dist/app.js
+BIN_FOR_GIT					= git
 BIN_FOR_NODE				= node
 BIN_FOR_MADGE				= madge	
 BIN_FOR_NPM					= npm
@@ -139,6 +140,16 @@ visualize-dependencies-graph:
 	@$(BIN_FOR_MADGE) --extensions ts src --image $(PATH_FOR_GRAPH_PNG)
 	open $(PATH_FOR_GRAPH_PNG)
 
+watch-styles:
+# Watch the SASS file and compile it into CSS.
+	$(call title, "Watching SASS")
+	$(BIN_FOR_NPX) sass --watch src/styles.scss $(PATH_TO_DIST)/styles.css
+
+watch: 
+# Watch the app and rebuild it on changes.
+	$(call title, "Watching the app")
+	$(BIN_FOR_NODE) $(PATH_FOR_ESBUILD_CONFIG) development --watch
+
 changelog:
 # Generate the changelog for the project.
 	$(call title, "Generating changelog")
@@ -157,4 +168,5 @@ env:
 release:
 # Release the project.
 	$(call title, "Releasing the project")
-	$(BIN_FOR_NPM) exec standard-version
+	$(BIN_FOR_NPM) exec node $(PATH_TO_SCRIPTS)/version-bump.mjs || exit 1
+	$(BIN_FOR_GIT) add manifest.json versions.json
