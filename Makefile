@@ -2,7 +2,9 @@
 # This Makefile is, for the most part, a wrapper around the scripts in the ./scripts folder
 # @link https://makefiletutorial.com/
 
+-include .env
 
+APP_NAME					= obsidian-plugin-template
 BIN_FOR_APP					= dist/app.js
 BIN_FOR_GIT					= git
 BIN_FOR_NODE				= node
@@ -18,6 +20,7 @@ PATH_TO_COVERAGE			= coverage/index.html
 PATH_TO_DIST				= dist
 PATH_TO_DOCS				= docs
 
+PATH_TO_PLUGINS				= $(OBSIDIAN_PLUGINS_PATH)/$(APP_NAME)
 
 
 define title
@@ -155,11 +158,6 @@ changelog:
 	$(call title, "Generating changelog")
 	$(BIN_FOR_NPX) auto-changelog -p -o CHANGELOG.md --hide-credit --release-summary --hide-empty-releases --sort-commits date-desc && git add CHANGELOG.md
 
-globalize:
-# Globalize the project.
-	$(call title, "Globalizing the project")
-	$(BIN_FOR_NODE) $(PATH_TO_SCRIPTS)/globalize.mjs
-
 env:
 # Move `.env-example` to `.env`.
 	$(call title, "Moving .env-example to .env")
@@ -170,3 +168,10 @@ release:
 	$(call title, "Releasing the project")
 	$(BIN_FOR_NPM) exec node $(PATH_TO_SCRIPTS)/version-bump.mjs || exit 1
 	$(BIN_FOR_GIT) add manifest.json versions.json
+
+link:
+# Link the project to the Obsidian plugins folder.
+	$(call title, "Linking the project to the Obsidian plugins folder")
+	mkdir -p $(OBSIDIAN_PLUGINS_PATH)/$(APP_NAME)
+	rm -rf $(OBSIDIAN_PLUGINS_PATH)/$(APP_NAME)
+	ln -s $(PWD)/$(PATH_TO_DIST)/ $(OBSIDIAN_PLUGINS_PATH)/$(APP_NAME)
