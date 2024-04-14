@@ -1,7 +1,7 @@
 {
   "name": "obsidian-boot",
   "version": "1.0.0",
-  "description": "",
+  "description": "A template for creating Obsidian plugins.",
   "scripts": {
     "build": "make build",
     "build:styles": "make build-styles",

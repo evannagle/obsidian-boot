@@ -50,12 +50,17 @@ deep-clean: clean
 	$(call title, "Cleaning up all generated files")
 	$(PATH_TO_SCRIPTS)/deep-clean.sh
 
+build-manifest:
+# Build the manifest file.
+	$(call title, "Building the manifest file")
+	cp manifest.json dist/manifest.json
+
 build-styles:
 # Compile the SASS file into CSS.
 	$(call title, "Compiling SASS")
 	$(BIN_FOR_NPX) sass src/styles.scss $(PATH_TO_DIST)/styles.css
 
-build: build-styles
+build: build-styles build-manifest
 # Build the app, dump into the dist folder.
 	$(call title, "Building the app: $(BIN_FOR_APP)")
 	$(BIN_FOR_NODE) $(PATH_FOR_ESBUILD_CONFIG) production

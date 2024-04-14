@@ -12,8 +12,7 @@ let rewriteFileContentsStatus = 'ask';
 
 async function walk(dir, oldName, newName) {
     if (oldName === newName) {
-        console.log("Old name and new name are the same. Have you eaten something past expiry? Exiting.");
-        process.exit(1);
+        return;
     }
 
     for await (const file of await fs.readdir(dir)) {
@@ -72,7 +71,7 @@ async function maybeChangeFileContents(dir, oldName, newName) {
 
     const result = data.replace(new RegExp(oldName, 'g'), newName);
     await fs.writeFile(dir, result);
-    console.log(`  - Replaced ${oldName} with ${newName} in ${dir}`);
+    console.log(`  - Replaced ${oldName} with ${newName} in ${dir}`);
 }
 
 async function maybeRenameFile(dir, oldName, newName) {
@@ -113,23 +112,51 @@ async function maybeRenameFile(dir, oldName, newName) {
     console.log(`  - Renamed ${dir} to ${newDir}`);
 }
 
+async function updateDescription(description) {
+    myPackage.description = description
+    // Update the package.json file
+    await fs.writeFile(path.resolve(__projectDir, 'package.json'), JSON.stringify(myPackage, null, 2));
+
+    // Update the manifest.json file
+    const manifestFilePath = path.resolve(__projectDir, 'manifest.json');
+    if (await fs.access(manifestFilePath)) {
+        const manifestJson = JSON.parse(await fs.readFile(manifestFilePath, 'utf8'));
+        manifestJson.description = description
+        await fs.writeFile(manifestFilePath, JSON.stringify(manifestJson, null, 2));
+    }
+}
+
 // ---- Main Script Execution ---- 
 (async () => {
-    // default new name should be the folder name
-    const { value: newName } = await prompts({
-        type: 'text',
-        name: 'value',
-        message: `What would you like to rename ${oldName} to?`,
-        initial: path.basename(__projectDir),
-    });
+    // ask for name and description
+    const { newName, description } = await prompts([
+        {
+            type: 'text',
+            name: 'newName',
+            message: `What would you like to rename ${oldName} to?`,
+            initial: path.basename(__projectDir),
+        },
+        {
+            type: 'text',
+            name: 'description',
+            message: 'Enter a description for the project',
+        }
+    ]);
 
     if (!newName) {
         console.log("No new name provided. Exiting.");
         process.exit(1);
     }
 
+    if (!description) {
+        console.log("No description provided. Exiting.");
+        process.exit(1);
+    }
+
     let rewriteFileNameStatus = 'ask';
     let rewriteFileContentsStatus = 'ask';
+
+    updateDescription(description);
 
     try {
         await walk(__projectDir, oldName, newName, rewriteFileNameStatus, rewriteFileContentsStatus);
